@@ -28,3 +28,11 @@ Record every work session, important design decision, and supporting artifact.
 - Decision: test shorter, complete answers on 100-200 prompts, then generate 15K documents and resume to 20K for 1K/5K/10K/20K search scaling.
 - Keep unique document IDs and checkpoint data in Google Drive. Corpus-generation speed is not search-engine benchmark speed.
 - Evidence: Google Drive data/raw/qwen_pilot_10_summary.json and qwen_pilot_batch_summary.json.
+
+## 2026-10-19 — Production corpus generation notebook prepared
+- Added `notebooks/03_generate_corpus_resumable.ipynb` on `feature/phase1-baseline`.
+- Design: 20,000 deterministic unique topic/task/context prompts; produce first 15,000 and then resume with TARGET_DOCS=20000.
+- Qwen2.5-0.5B-Instruct, T4 GPU, batch 8, request short 3-4 sentence answers; max_new_tokens=100 is a safety cap, not a length target.
+- 100-document quality pilot before the main run; monitor mean token length, empty responses and cap hits.
+- Checkpoint JSONL every 200 docs on Drive and validate IDs/prompt consistency before resuming; save generation status JSON.
+- Not yet run: no claim that 15K documents exist or that the 100-doc pilot passed. Wait for user Colab execution and inspect artifacts.
