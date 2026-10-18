@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# Local/runtime artifacts
+.DS_Store
+*.log
+*.prof
+*.pstats
+
+# Large data and generated arrays (keep in Drive)
+data/raw/*
+data/processed/*
+data/embeddings/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/embeddings/.gitkeep
+*.npy
+*.npz
+*.parquet
+*.pkl
+*.joblib
+
+# Oversized temporary benchmark artifacts
+benchmarks/raw_results/tmp/
