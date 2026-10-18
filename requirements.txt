@@ -1,0 +1,9 @@
+# Pin exact tested versions after the first Colab environment snapshot.
+numpy
+scipy
+scikit-learn
+pandas
+matplotlib
+numba
+line_profiler
+psutil
