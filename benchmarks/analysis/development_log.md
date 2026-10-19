@@ -49,3 +49,10 @@ Record every work session, important design decision, and supporting artifact.
 - Existing 15K JSONL corpus is preserved; resume logic checks IDs and generates only missing 5K (IDs 15000–19999).
 - Before production, verify Colab prints `Found 15000 existing documents. Target: 20000.` and `Remaining: 5000.`
 - Final 5K production has NOT been run or verified yet. After run, audit token mean, duplicate text and completeness, then save actual metrics.
+
+## 2026-10-19 — Corpus complete, 20K audit
+- All 20,000 JSONL rows parsed successfully; IDs 0..19999 and 20,000 prompts unique, zero empty responses, zero malformed rows.
+- Mean 58.128 model tokens, median 53, 288 extra exact duplicate response texts, 678 responses >=127 tokens; 19,378 end in punctuation.
+- Final 5K: 3192.16 seconds, mean 81.194 tokens, 1.566 docs/s. Full generation: 10573.73 seconds (dataset creation only).
+- Archived generation CSV at benchmarks/raw_results/corpus_generation_summary.csv and draft dataset report at report/dataset_20k_results.md.
+- Next phase: 100 query prompts, 1K/5K/10K/20K cosine retrieval baseline, profiler and repeatable timings.
