@@ -64,3 +64,7 @@ Large JSONL and future embeddings stay in Drive. Code, lightweight raw CSV resul
 ## Phase 2A results
 
 [Full measured analysis](report/phase2a_sparse_dense_results.md) · [Raw timing CSV](benchmarks/raw_results/phase2a_dot_products_raw.csv) · [Memory CSV](benchmarks/raw_results/phase2a_memory.csv) · [Figures](figures/phase2a_figures.md). At 20K, TF-IDF CSR occupies 6.701 MiB, dense embeddings 29.297 MiB, embedding CSR 58.670 MiB. Same-embedding dense–dense search median 149.586 ms, versus 6066.276 ms for custom embedding sparse–sparse. This comparison is specific to these algorithms and CPU environment.
+
+## Phase 2B notebook prepared (not yet benchmarked)
+
+[Notebook 07 — Dimensionality Reduction](notebooks/07_phase2b_dimensionality_reduction.ipynb) follows instructor `starter_code/phase2_matrix_ops/svd_power_iteration.py` using real cached 20K × 384 MiniLM embeddings. Implements custom block power-iteration SVD, sklearn TruncatedSVD and PCA, and a 1K NumPy full-SVD reference. Pilot is enabled by default (1K, k=50). After correctness, full run will measure N=1K/5K/10K/20K, k=50/100/200, fit+reconstruction time, Frobenius error, projected array storage and plots. **No Phase 2B experimental results have been claimed yet.**
