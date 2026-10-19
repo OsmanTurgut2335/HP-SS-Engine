@@ -1,9 +1,25 @@
-# Pin exact tested versions after the first Colab environment snapshot.
+# Project-wide Python dependencies; exact compatible versions will be pinned
+# after Phase 2/3 implementation and a clean Colab reproducibility run.
+# Phase 1: TF-IDF, numerical verification, profiling and figures
 numpy
 scipy
 scikit-learn
 pandas
 matplotlib
-numba
 line_profiler
 psutil
+
+# Corpus generation (Qwen2.5-0.5B-Instruct, notebooks/03_...)
+torch
+transformers>=4.44,<5
+accelerate
+safetensors
+
+# Phase 2C: JIT compilation
+numba
+
+# Dense semantic embeddings for Phase 2A (planned)
+sentence-transformers
+
+# Phase 3 parallel Ray approach (planned; install only when needed)
+# ray
