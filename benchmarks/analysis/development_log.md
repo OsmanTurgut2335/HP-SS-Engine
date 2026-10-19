@@ -36,3 +36,10 @@ Record every work session, important design decision, and supporting artifact.
 - 100-document quality pilot before the main run; monitor mean token length, empty responses and cap hits.
 - Checkpoint JSONL every 200 docs on Drive and validate IDs/prompt consistency before resuming; save generation status JSON.
 - Not yet run: no claim that 15K documents exist or that the 100-doc pilot passed. Wait for user Colab execution and inspect artifacts.
+
+## 2026-10-19 — First 15,000-document corpus complete
+- Google Drive `data/raw/qwen_corpus_20k_progress.jsonl`: 15,000 rows, 15,000 unique IDs (0–14999), zero missing IDs, zero empty responses.
+- Production status: 7381.57 s, batch 8, Qwen2.5-0.5B-Instruct on T4, mean 50.44 tokens, ~2.03 docs/s.
+- Direct corpus audit: median 45 tokens, min 9, max 128, 284 repeated response texts, 247 responses at >=127 tokens, 14,778 responses ending in punctuation. Text duplicates are not duplicate IDs.
+- Colab session disconnected before final audit cell, but checkpoint file and full corpus persisted to Drive.
+- Next: plan additional 5,000 docs; improve average token margin and assess text duplicates before search benchmarks. Preserve source and record any filtering decisions.
