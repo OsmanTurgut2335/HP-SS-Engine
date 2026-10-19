@@ -47,3 +47,7 @@ Pure Python baseline at 100/500/1000 documents measured medians of 29.685/125.22
 - **Important:** CSV lacks the subsequently added `sparse_sparse_embedding` matched-space workload, meaning the pilot ran an older notebook revision. Do not claim the four-workload comparison is finished. Rerun current notebook to obtain 100 rows at 1K, then 400 rows across 1K/5K/10K/20K.
 - First Step 2 failure was unsorted TF-IDF CSR indices in custom two-pointer dot; fixed by calling `sort_indices()`. No GPU is needed for the CPU search benchmark; embedding creation was performed on CPU due to Colab GPU quota.
 - Interpretation: TF-IDF sparse vs embedding dense is a **cross-representation** comparison and not an isolated format speedup; dense embeddings stored as CSR take more memory because they are nearly fully populated.
+
+## Phase 2A completed — 2026-10-20
+
+Verified 400 measured query times (four workloads × four scales × 25 runs), four memory rows and two updated figures. See [full report](report/phase2a_sparse_dense_results.md), [raw CSV](benchmarks/raw_results/phase2a_dot_products_raw.csv), [memory CSV](benchmarks/raw_results/phase2a_memory.csv), [figures](figures/phase2a_figures.md). Phase 2B and 2C remain pending. Earlier 1K-only pilot was superseded by this full run.
