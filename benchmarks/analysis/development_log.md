@@ -63,3 +63,10 @@ Record every work session, important design decision, and supporting artifact.
 - Median 359.895 ms/query, mean 368.495 ms, range 271.401–522.266 ms. Search timing excludes TF-IDF construction.
 - cProfile for one 1K query: 0.698s naive function, 362891 total function calls (including profiler/IPython overhead). Dominant cumulative paths: sparse multiply 0.376s, getrow 0.175s, sum 0.134s. Cumulative times overlap and should not be added.
 - Next: benchmark vectorized CSR matrix-vector reference on the same query/scale, validate top-10 scores and IDs, then plan 5K/10K/20K comparisons.
+
+## 2026-10-19 — Pure Python Phase 1 completed
+- 512-feature dense TF-IDF with explicit nested Python loops; 75 timed runs (5 queries x 5 repeats x 3 scales).
+- Median latency: 100 docs 29.685ms, 500 docs 125.223ms, 1000 docs 228.967ms.
+- cProfile: cosine 1000 calls, 0.284s self time. line_profiler: cosine call line 99.7% of top-k inclusive time, sorting ~0.1%; three multiply/accumulate lines each ~17-18% of cosine time.
+- Saved raw CSV and both profiler text files to GitHub; two PNG figures saved in Google Drive figures folder. Report draft updated.
+- Next: compare optimized dense methods using identical 512-feature vectors and queries; do not compare this directly with full-vocabulary CSR baseline.
