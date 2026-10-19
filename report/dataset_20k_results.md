@@ -36,3 +36,28 @@ Executed `05_phase1_pure_python_profiling.ipynb` on Colab CPU with fixed 512-fea
 `cProfile` identified 1,000 calls to `pure_python_cosine` as the principal cost (0.284 s own time, 0.287 s cumulative). `line_profiler` found 99.7% of the inclusive time of `pure_python_topk` on the cosine-call line, with only about 0.1% on sorting. Within cosine, the three elementwise multiplication/accumulation lines account for 17.3%, 17.9%, and 17.4% of cosine line-profile time; their associated loop overhead accounts for 15.8%, 16.1%, and 15.2%. This yields three concrete optimization targets: repeated Python elementwise dot loop, repeated per-document norm loops, and Python-level loop iteration overhead. Profiled durations include profiler overhead and must not be substituted for benchmark latency.
 
 Raw timings: `benchmarks/raw_results/pure_python_cosine_phase1_raw.csv`. Profiler outputs: `benchmarks/profiling/pure_python_1k_cprofile.txt` and `pure_python_1k_line_profile.txt`. Figures generated in Google Drive `figures/phase1_pure_python_scaling.png` and `figures/phase1_pure_python_latency_boxplot.png`. This 512-feature dense baseline is not directly comparable for speedup to the earlier full-vocabulary CSR/SciPy baseline.
+
+## Representative sample items
+
+The following are excerpts from actual corpus records, retaining the original document IDs and prompts:
+
+| ID | Prompt | Response excerpt |
+|---:|---|---|
+| 19995 | Explain a reliability challenge in API authentication for a transportation provider. | A primary reliability challenge in API authentication for a transportation provider is ensuring that user credentials are securely transmitted over the network... |
+| 19998 | Describe a simple example involving solar power for a small business. | Solar power can significantly reduce energy costs by offsetting electricity bills through renewable energy sources like photovoltaics (PV)... |
+| 19999 | Describe a practical application of content moderation in an environmental project. | Content moderation is crucial in environmental projects to ensure that all submitted materials are accurate, reliable, and free from errors... |
+
+These are English LLM-generated responses, not scraped web pages. Full items are in the Drive JSONL file; excerpts are shown here to keep the report compact.
+
+## Phase 1 deliverables and figure references
+
+- **Pure Python nested-loop cosine:** implemented in `notebooks/05_phase1_pure_python_profiling.ipynb`, with score/top-10 correctness checks.
+- **Function profiler:** `benchmarks/profiling/pure_python_1k_cprofile.txt`.
+- **Line profiler:** `benchmarks/profiling/pure_python_1k_line_profile.txt`.
+- **Raw baseline measurements:** `benchmarks/raw_results/pure_python_cosine_phase1_raw.csv`, 75 rows (100/500/1000 docs, 5 queries x 5 repeats).
+- **Figure 1, scaling:** https://drive.google.com/file/d/1N7Pjsv5ReqExrCd_gh5mp9Fi_Os6PBF1/view
+- **Figure 2, latency boxplot:** https://drive.google.com/file/d/1pYJnUPp6SDtpQLq4aZrYDq5L0DPYDYK3/view
+
+Both figures were created by the notebook from measured data, and are indexed in `figures/phase1_figures.md`. They currently reside in Drive. A separate screenshot of the profiling output may be inserted in the final PDF report.
+
+**Phase 1 conclusion:** The line profiler attributes 99.7% of the inclusive top-k function time to the call performing cosine calculations. Element-wise dot and norm loops dominate; sorting is negligible at this scale. Therefore the next optimization targets are reducing Python loop overhead and reusing/avoiding redundant norm computations. The current dense 512-feature baseline is the appropriate like-for-like reference for those experiments.
