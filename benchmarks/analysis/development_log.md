@@ -70,3 +70,10 @@ Record every work session, important design decision, and supporting artifact.
 - cProfile: cosine 1000 calls, 0.284s self time. line_profiler: cosine call line 99.7% of top-k inclusive time, sorting ~0.1%; three multiply/accumulate lines each ~17-18% of cosine time.
 - Saved raw CSV and both profiler text files to GitHub; two PNG figures saved in Google Drive figures folder. Report draft updated.
 - Next: compare optimized dense methods using identical 512-feature vectors and queries; do not compare this directly with full-vocabulary CSR baseline.
+
+## 2026-10-20 — Phase 2A complete
+- 20K MiniLM 384-d embeddings cached, sparse TF-IDF 9,617 features; CPU benchmark.
+- 1K/5K/10K/20K × four dot-product workloads × 25 runs = 400 actual measurements, CSV mirrored to GitHub.
+- 20K medians: TF-IDF SS 560.687ms, embedding SS 6066.276ms, embedding SD 3054.274ms, embedding DD 149.586ms.
+- 20K memory: TF-IDF CSR 6.701MiB, dense embeddings 29.297MiB, embedding CSR 58.670MiB.
+- Two Drive PNG figures indexed in GitHub; complete results in report/phase2a_sparse_dense_results.md. Next Phase 2B dimensionality reduction.
