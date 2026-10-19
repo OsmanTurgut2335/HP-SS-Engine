@@ -34,3 +34,16 @@ This branch starts from `feature/phase1-baseline` and preserves all Phase 1 resu
 ## Phase 1 baseline scaling note
 
 Pure Python baseline at 100/500/1000 documents measured medians of 29.685/125.223/228.967 ms. The 20K estimate of ~4.6 s per query is only a linear extrapolation, not a benchmark. For Phase 2, use required 1K/5K/10K/20K sizes; if practical, extend the pure Python baseline at matching representation and query inputs, with fewer repetitions documented when expensive.
+
+## Phase 2A 1K pilot — verified Drive artifacts
+
+- Raw CSV: https://drive.google.com/file/d/1I7UJcxIhq0-uZmLq9CtD-nvl10UpXaXm/view (75 rows, **three** workloads, 5 queries × 5 repeats).
+- Memory CSV: https://drive.google.com/file/d/1sNhb4sD99B4sD40vwxFmDKsZmnw_LzNO/view (1K only).
+- Memory figure: https://drive.google.com/file/d/15WUfBEKUbaZHiYq-7cW9Nw94X-L5qtb7/view
+- Latency figure: https://drive.google.com/file/d/1feqmRY5DTqPz09j5fc1uViTB8E0OaDPt/view
+- Cached 20K × 384 embedding: https://drive.google.com/file/d/1zS2QlNooedY4qBYyh5h6Um4fppBkj16w/view (30,720,128 bytes).
+- Measured median latency, 1K: TF-IDF sparse–sparse **67.943 ms**, embedding sparse–dense **342.490 ms**, embedding dense–dense **13.243 ms**.
+- Memory, 1K: TF-IDF CSR **0.2947 MiB**, dense embedding **1.4648 MiB**, embedding CSR **2.9335 MiB**.
+- **Important:** CSV lacks the subsequently added `sparse_sparse_embedding` matched-space workload, meaning the pilot ran an older notebook revision. Do not claim the four-workload comparison is finished. Rerun current notebook to obtain 100 rows at 1K, then 400 rows across 1K/5K/10K/20K.
+- First Step 2 failure was unsorted TF-IDF CSR indices in custom two-pointer dot; fixed by calling `sort_indices()`. No GPU is needed for the CPU search benchmark; embedding creation was performed on CPU due to Colab GPU quota.
+- Interpretation: TF-IDF sparse vs embedding dense is a **cross-representation** comparison and not an isolated format speedup; dense embeddings stored as CSR take more memory because they are nearly fully populated.
