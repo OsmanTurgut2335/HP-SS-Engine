@@ -43,3 +43,9 @@ Record every work session, important design decision, and supporting artifact.
 - Direct corpus audit: median 45 tokens, min 9, max 128, 284 repeated response texts, 247 responses at >=127 tokens, 14,778 responses ending in punctuation. Text duplicates are not duplicate IDs.
 - Colab session disconnected before final audit cell, but checkpoint file and full corpus persisted to Drive.
 - Next: plan additional 5,000 docs; improve average token margin and assess text duplicates before search benchmarks. Preserve source and record any filtering decisions.
+
+## 2026-10-19 — Final 5K production prepared
+- Updated `notebooks/03_generate_corpus_resumable.ipynb`: `TARGET_DOCS=20000`, revised response-length instruction to ~65–85 tokens.
+- Existing 15K JSONL corpus is preserved; resume logic checks IDs and generates only missing 5K (IDs 15000–19999).
+- Before production, verify Colab prints `Found 15000 existing documents. Target: 20000.` and `Remaining: 5000.`
+- Final 5K production has NOT been run or verified yet. After run, audit token mean, duplicate text and completeness, then save actual metrics.
