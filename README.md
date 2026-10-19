@@ -6,7 +6,7 @@ Course project: HPC for AI, Fall 2026. This repository implements and benchmarks
 
 - **Dataset:** 20,000 English responses generated with Qwen2.5-0.5B-Instruct; unique IDs and prompts verified. Full JSONL is stored on Google Drive, not committed to GitHub.
 - **Phase 1 completed:** explicit Python-loop cosine, top-10 retrieval, correctness checks, `cProfile`, `line_profiler`, and 75 timed searches at 100/500/1,000 documents. Median times: **29.685 / 125.223 / 228.967 ms**.
-- **Phase 2 in preparation:** new `feature/phase2-matrix-ops` branch and dedicated Drive folders. No Phase 2 benchmark results yet.
+- **Phase 2A notebook ready to run:** `notebooks/06_phase2a_sparse_dense.ipynb` contains a 1K pilot, then 1K/5K/10K/20K experiments, manual dot products and plots. No Phase 2 measurements yet.
 - **Phase 3/4:** not yet implemented.
 
 ## Repository layout
@@ -16,6 +16,7 @@ Course project: HPC for AI, Fall 2026. This repository implements and benchmarks
 | `notebooks/03_generate_corpus_resumable.ipynb` | Resumable Qwen text generation |
 | `notebooks/04_similarity_baseline.ipynb` | Earlier Python-loop/SciPy CSR baseline (not pure Python arithmetic) |
 | `notebooks/05_phase1_pure_python_profiling.ipynb` | Assignment-compliant pure-Python cosine baseline, profiling and plots |
+| `notebooks/06_phase2a_sparse_dense.ipynb` | Phase 2A: real semantic embeddings, CSR TF-IDF, custom dot products, benchmark and figures |
 | `benchmarks/raw_results/` | Measured CSV results |
 | `benchmarks/profiling/` | cProfile and line_profiler outputs |
 | `benchmarks/analysis/` | Experiment/development logs |
