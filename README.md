@@ -6,7 +6,7 @@ Course project: HPC for AI, Fall 2026. This repository implements and benchmarks
 
 - **Dataset:** 20,000 English responses generated with Qwen2.5-0.5B-Instruct; unique IDs and prompts verified. Full JSONL is stored on Google Drive, not committed to GitHub.
 - **Phase 1 completed:** explicit Python-loop cosine, top-10 retrieval, correctness checks, `cProfile`, `line_profiler`, and 75 timed searches at 100/500/1,000 documents. Median times: **29.685 / 125.223 / 228.967 ms**.
-- **Phase 2A notebook ready to run:** `notebooks/06_phase2a_sparse_dense.ipynb` contains a 1K pilot, then 1K/5K/10K/20K experiments, manual dot products and plots. No Phase 2 measurements yet.
+- **Phase 2A completed:** 1K/5K/10K/20K, 400 measured searches, custom dot-product methods, real 384-dimensional MiniLM embeddings, memory and latency figures. [Results](report/phase2a_sparse_dense_results.md) · [Figures](figures/phase2a_figures.md). Phase 2B/2C pending.
 - **Phase 3/4:** not yet implemented.
 
 ## Repository layout
@@ -60,3 +60,7 @@ See [requirements.txt](requirements.txt). It lists project-wide dependencies, in
 ## Data and results policy
 
 Large JSONL and future embeddings stay in Drive. Code, lightweight raw CSV results, profiling outputs, documentation and links to figures are tracked in GitHub. Do not compare timing results obtained using different vector dimensionalities or representations as if they were like-for-like speedups. No estimated timing is presented as measured data.
+
+## Phase 2A results
+
+[Full measured analysis](report/phase2a_sparse_dense_results.md) · [Raw timing CSV](benchmarks/raw_results/phase2a_dot_products_raw.csv) · [Memory CSV](benchmarks/raw_results/phase2a_memory.csv) · [Figures](figures/phase2a_figures.md). At 20K, TF-IDF CSR occupies 6.701 MiB, dense embeddings 29.297 MiB, embedding CSR 58.670 MiB. Same-embedding dense–dense search median 149.586 ms, versus 6066.276 ms for custom embedding sparse–sparse. This comparison is specific to these algorithms and CPU environment.
