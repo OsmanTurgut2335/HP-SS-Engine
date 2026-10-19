@@ -1,0 +1,38 @@
+         8082 function calls (8081 primitive calls) in 0.483 seconds
+
+   Ordered by: cumulative time
+   List reduced from 48 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+      3/2    0.000    0.000    0.291    0.146 interactiveshell.py:3512(run_code)
+        2    0.190    0.095    0.291    0.146 {built-in method builtins.exec}
+     1000    0.284    0.000    0.287    0.000 954542095.py:1(pure_python_cosine)
+        1    0.001    0.001    0.101    0.101 954542095.py:16(pure_python_topk)
+        2    0.002    0.001    0.002    0.001 ipstruct.py:125(__getattr__)
+     2000    0.002    0.000    0.002    0.000 {built-in method math.sqrt}
+        1    0.001    0.001    0.001    0.001 {method 'sort' of 'list' objects}
+     3004    0.001    0.000    0.001    0.000 {built-in method builtins.len}
+     1000    0.001    0.000    0.001    0.000 {method 'append' of 'list' objects}
+     1000    0.000    0.000    0.000    0.000 954542095.py:21(<lambda>)
+        2    0.000    0.000    0.000    0.000 codeop.py:113(__call__)
+        2    0.000    0.000    0.000    0.000 {built-in method builtins.compile}
+        1    0.000    0.000    0.000    0.000 515697081.py:1(<cell line: 0>)
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+        1    0.000    0.000    0.000    0.000 events.py:87(_run)
+        2    0.000    0.000    0.000    0.000 interactiveshell.py:3337(_update_code_co_name)
+        1    0.000    0.000    0.000    0.000 {method 'run' of '_contextvars.Context' objects}
+        1    0.000    0.000    0.000    0.000 ioloop.py:750(_run_callback)
+        1    0.000    0.000    0.000    0.000 iostream.py:495(_flush)
+        1    0.000    0.000    0.000    0.000 iostream.py:577(_flush_buffer)
+        4    0.000    0.000    0.000    0.000 dis.py:909(findlinestarts)
+        6    0.000    0.000    0.000    0.000 {built-in method builtins.next}
+        2    0.000    0.000    0.000    0.000 contextlib.py:303(helper)
+        1    0.000    0.000    0.000    0.000 iostream.py:584(_rotate_buffer)
+        4    0.000    0.000    0.000    0.000 {built-in method builtins.getattr}
+        2    0.000    0.000    0.000    0.000 contextlib.py:136(__enter__)
+        1    0.000    0.000    0.000    0.000 base_events.py:773(time)
+        2    0.000    0.000    0.000    0.000 contextlib.py:108(__init__)
+        2    0.000    0.000    0.000    0.000 hooks.py:103(__call__)
+        2    0.000    0.000    0.000    0.000 contextlib.py:145(__exit__)
+
+
