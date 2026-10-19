@@ -18,3 +18,8 @@ The generation notebook, prompt mapping, model name, random seed, output schema,
 
 ## Pending results
 Search baseline profiling, sparse/dense representation comparisons, SVD, parallel speedups, recall@k, and the final performance figures have not yet been measured; they will be added from actual experiment output.
+
+## Phase 1 baseline and profiling protocol
+The initial CSR/SciPy baseline measured 25 CPU query executions at 1,000 documents: median 359.895 ms, mean 368.495 ms, range 271.401–522.266 ms. Function-level cProfile attributed cumulative time primarily to repeated sparse multiply, row extraction, and sum operations; cumulative times overlap. This baseline uses Python iteration with SciPy arithmetic and therefore is **not** the pure Python nested-loop baseline required by the assignment.
+
+Notebook `05_phase1_pure_python_profiling.ipynb` implements explicit element-wise Python cosine loops, validates scores against NumPy, profiles with both cProfile and line_profiler, and will save 25 repetitions per scale at 100/500/1,000 documents. To keep pure Python profiling tractable, it uses a separate fixed 512-feature dense TF-IDF representation. Figures are generated **only after** real measurements are run, so their measured values remain pending. Results using this representation cannot be directly compared for speedup against the earlier full-vocabulary CSR baseline.
