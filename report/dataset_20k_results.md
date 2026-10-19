@@ -23,3 +23,16 @@ Search baseline profiling, sparse/dense representation comparisons, SVD, paralle
 The initial CSR/SciPy baseline measured 25 CPU query executions at 1,000 documents: median 359.895 ms, mean 368.495 ms, range 271.401–522.266 ms. Function-level cProfile attributed cumulative time primarily to repeated sparse multiply, row extraction, and sum operations; cumulative times overlap. This baseline uses Python iteration with SciPy arithmetic and therefore is **not** the pure Python nested-loop baseline required by the assignment.
 
 Notebook `05_phase1_pure_python_profiling.ipynb` implements explicit element-wise Python cosine loops, validates scores against NumPy, profiles with both cProfile and line_profiler, and will save 25 repetitions per scale at 100/500/1,000 documents. To keep pure Python profiling tractable, it uses a separate fixed 512-feature dense TF-IDF representation. Figures are generated **only after** real measurements are run, so their measured values remain pending. Results using this representation cannot be directly compared for speedup against the earlier full-vocabulary CSR baseline.
+
+## Phase 1 measured pure-Python baseline (2026-10-19)
+Executed `05_phase1_pure_python_profiling.ipynb` on Colab CPU with fixed 512-feature TF-IDF dense vectors and Python nested loops (three loops per cosine). For each corpus scale, five queries were run five times (25 timings per scale), excluding vectorization, warmup and profiling overhead.
+
+| Documents | Median query latency (ms) | Mean (ms) | Minimum (ms) | Maximum (ms) |
+|---:|---:|---:|---:|---:|
+| 100 | 29.685 | 30.106 | 15.461 | 53.626 |
+| 500 | 125.223 | 121.429 | 78.180 | 185.954 |
+| 1000 | 228.967 | 236.177 | 80.660 | 520.501 |
+
+`cProfile` identified 1,000 calls to `pure_python_cosine` as the principal cost (0.284 s own time, 0.287 s cumulative). `line_profiler` found 99.7% of the inclusive time of `pure_python_topk` on the cosine-call line, with only about 0.1% on sorting. Within cosine, the three elementwise multiplication/accumulation lines account for 17.3%, 17.9%, and 17.4% of cosine line-profile time; their associated loop overhead accounts for 15.8%, 16.1%, and 15.2%. This yields three concrete optimization targets: repeated Python elementwise dot loop, repeated per-document norm loops, and Python-level loop iteration overhead. Profiled durations include profiler overhead and must not be substituted for benchmark latency.
+
+Raw timings: `benchmarks/raw_results/pure_python_cosine_phase1_raw.csv`. Profiler outputs: `benchmarks/profiling/pure_python_1k_cprofile.txt` and `pure_python_1k_line_profile.txt`. Figures generated in Google Drive `figures/phase1_pure_python_scaling.png` and `figures/phase1_pure_python_latency_boxplot.png`. This 512-feature dense baseline is not directly comparable for speedup to the earlier full-vocabulary CSR/SciPy baseline.
