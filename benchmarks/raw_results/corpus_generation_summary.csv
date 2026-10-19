@@ -1,0 +1,4 @@
+stage,documents,elapsed_seconds,docs_per_second,mean_response_tokens,median_response_tokens,duplicate_extra,token_cap_count
+first_15k,15000,7381.57,2.032,50.439,45,284,247
+final_5k,5000,3192.16,1.566,81.194,80,4,431
+combined_20k,20000,10573.73,1.891,58.128,53,288,678
