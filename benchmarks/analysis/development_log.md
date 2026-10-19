@@ -56,3 +56,10 @@ Record every work session, important design decision, and supporting artifact.
 - Final 5K: 3192.16 seconds, mean 81.194 tokens, 1.566 docs/s. Full generation: 10573.73 seconds (dataset creation only).
 - Archived generation CSV at benchmarks/raw_results/corpus_generation_summary.csv and draft dataset report at report/dataset_20k_results.md.
 - Next phase: 100 query prompts, 1K/5K/10K/20K cosine retrieval baseline, profiler and repeatable timings.
+
+## 2026-10-19 — First CPU similarity-search baseline
+- Colab T4 environment, but SciPy TF-IDF CSR search runs on **CPU**, not GPU.
+- Naive Python per-document sparse cosine top-10, N=1000, 5 query indices x 5 repeats, 25 raw measurements saved in Drive and mirrored to `benchmarks/raw_results/naive_cosine_tfidf_1k.csv`.
+- Median 359.895 ms/query, mean 368.495 ms, range 271.401–522.266 ms. Search timing excludes TF-IDF construction.
+- cProfile for one 1K query: 0.698s naive function, 362891 total function calls (including profiler/IPython overhead). Dominant cumulative paths: sparse multiply 0.376s, getrow 0.175s, sum 0.134s. Cumulative times overlap and should not be added.
+- Next: benchmark vectorized CSR matrix-vector reference on the same query/scale, validate top-10 scores and IDs, then plan 5K/10K/20K comparisons.
