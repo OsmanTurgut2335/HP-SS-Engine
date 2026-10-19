@@ -51,3 +51,7 @@ Pure Python baseline at 100/500/1000 documents measured medians of 29.685/125.22
 ## Phase 2A completed — 2026-10-20
 
 Verified 400 measured query times (four workloads × four scales × 25 runs), four memory rows and two updated figures. See [full report](report/phase2a_sparse_dense_results.md), [raw CSV](benchmarks/raw_results/phase2a_dot_products_raw.csv), [memory CSV](benchmarks/raw_results/phase2a_memory.csv), [figures](figures/phase2a_figures.md). Phase 2B and 2C remain pending. Earlier 1K-only pilot was superseded by this full run.
+
+## Phase 2B notebook prepared (not yet benchmarked)
+
+[Notebook 07 — Dimensionality Reduction](notebooks/07_phase2b_dimensionality_reduction.ipynb) follows instructor `starter_code/phase2_matrix_ops/svd_power_iteration.py` using real cached 20K × 384 MiniLM embeddings. Implements custom block power-iteration SVD, sklearn TruncatedSVD and PCA, and a 1K NumPy full-SVD reference. Pilot is enabled by default (1K, k=50). After correctness, full run will measure N=1K/5K/10K/20K, k=50/100/200, fit+reconstruction time, Frobenius error, projected array storage and plots. **No Phase 2B experimental results have been claimed yet.**
