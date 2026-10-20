@@ -18,8 +18,8 @@
 - [Phase 3B process startup/first-search CSV](../benchmarks/phase3b_processpool_startup_full.csv)
 - [Phase 3D correctness CSV](../benchmarks/phase3d_same_vectors_correctness_full.csv)
 - [Phase 3A pilot findings](phase3a_pilot_findings.md), [Phase 3B pilot findings](phase3b_pilot_findings.md), [Phase 3C pilot findings](phase3c_pilot_findings.md)
-- [Phase 2C original Gram-matrix Numba notebook](../notebooks/09_phase2c_vectorise_vs_loop.ipynb), [Phase 2 findings](phase2_findings_and_open_items.md)
-- [Phase 1 pure-Python TF-IDF notebook](../notebooks/05_phase1_pure_python_profiling.ipynb), [Phase 1 findings](phase1_findings_and_open_items.md)
+- [Phase 2C original Gram-matrix Numba notebook](https://github.com/OsmanTurgut2335/HP-SS-Engine/blob/feature/phase2-matrix-ops/notebooks/09_phase2c_vectorise_vs_loop.ipynb), [Phase 2 findings](https://github.com/OsmanTurgut2335/HP-SS-Engine/blob/feature/phase2-matrix-ops/report/phase2_findings_and_open_items.md)
+- [Historical Phase 1 notebook and findings](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase1-baseline)
 
 ## Read this before comparing speedups
 
@@ -30,3 +30,8 @@
 5. Batched BLAS is the current speed/complexity recommendation, not a universal winner for every workload.
 6. At near-equal float32 scores, top-10 **ordering** can change due to accumulation differences; Phase 3A documents this. Phase 3D tested top-10 correctness on its specific queries.
 7. Original PNGs and CSVs were uploaded to GitHub from the verified Drive outputs; SVG charts were independently generated from verified summary values.
+
+
+## Branch separation (2026-10-21)
+
+Phase 2 and Phase 3 now contain **only their own experimental artifacts** plus shared project scaffolding. Historical Phase 2 notebook and report links point to the dedicated [Phase 2 branch](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase2-matrix-ops); Phase 1 history is on the [Phase 1 branch](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase1-baseline). The final Phase 4 branch is intentionally unchanged because it is an integration pipeline.
