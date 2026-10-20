@@ -68,3 +68,12 @@ Large JSONL and future embeddings stay in Drive. Code, lightweight raw CSV resul
 ## Phase 2B notebook prepared (not yet benchmarked)
 
 [Notebook 07 — Dimensionality Reduction](notebooks/07_phase2b_dimensionality_reduction.ipynb) follows instructor `starter_code/phase2_matrix_ops/svd_power_iteration.py` using real cached 20K × 384 MiniLM embeddings. Implements custom block power-iteration SVD, sklearn TruncatedSVD and PCA, and a 1K NumPy full-SVD reference. Pilot is enabled by default (1K, k=50). After correctness, full run will measure N=1K/5K/10K/20K, k=50/100/200, fit+reconstruction time, Frobenius error, projected array storage and plots. **No Phase 2B experimental results have been claimed yet.**
+
+
+## Phase 2B complete: measured artifacts
+
+- [Full reduction results](report/phase2b_full_results.md) and [decision analysis](report/phase2b_decision_results.md).
+- [Full reduction CSV](benchmarks/raw_results/phase2b_methods_full.csv), [fit-only CSV](benchmarks/raw_results/phase2b_fit_only_full.csv), [retrieval CSV](benchmarks/raw_results/phase2b_retrieval_full.csv), [memory CSV](benchmarks/raw_results/phase2b_projected_matrix_memory.csv), [full SVD reference](benchmarks/raw_results/phase2b_full_svd_reference_1k.csv).
+- [Figure index](figures/phase2b_figures.md) (PNGs stored in Google Drive).
+- [Notebook 07](notebooks/07_phase2b_dimensionality_reduction.ipynb) and [Notebook 08](notebooks/08_phase2b_decision_validation.ipynb).
+- Provisional design choice: TruncatedSVD k=100. At 20K, five in-corpus queries had 94% mean top-10 overlap; this is not ground-truth relevance accuracy. Phase 2C is next.
