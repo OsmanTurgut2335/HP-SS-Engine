@@ -5,7 +5,7 @@ Date: 2026-10-20 | Course: YZM 513 | Branch: `feature/phase3-parallelism`
 
 **For our in-memory, normalized 384-dimensional MiniLM embedding search, batched NumPy/BLAS is the best measured speedup per unit of code complexity.** On the *same Phase 3B run*, 20,000 documents × 128 queries, BLAS threads=1, the sequential baseline was 670.172 ms and batched BLAS was 435.124 ms (**1.540×**). ThreadPool 4 workers was 489.070 ms (1.370×), ProcessPool 4 workers/chunksize 8 was 475.582 ms (1.409×). These are medians of 5 repeats; **do not combine absolute times from separate Colab sessions**.
 
-We implemented/evaluated five strategies: (1) NumPy/BLAS, (2) Numba `parallel=True`/`prange`, (3) ThreadPoolExecutor, (4) ProcessPoolExecutor, (5) asyncio. **Important:** Numba's existing benchmark is a Gram-matrix workload, and asyncio's headline speedup is *simulated I/O*, not the same top-k retrieval workload. Therefore the five strategies are covered, but a strictly same-workload, five-way benchmark **has not been completed**. Whether the reused Phase 2C Numba implementation counts toward the Phase 3 bonus is subject to instructor evaluation.
+We implemented/evaluated five strategies: (1) NumPy/BLAS, (2) Numba `parallel=True`/`prange`, (3) ThreadPoolExecutor, (4) ProcessPoolExecutor, (5) asyncio. **Updated after Phase 3D:** Numba now has an additional **same-vector, same-top-k-search** comparison against NumPy, documented below. asyncio's headline speedup remains *simulated I/O*, not CPU top-k search. Thus we have five implemented strategies, with CPU strategies measured in matched groups across Phase 3B/3D, but **not one single-session all-five comparison**. Whether the reused Phase 2C Numba implementation counts toward the Phase 3 bonus is subject to instructor evaluation.
 
 ## Instructor checklist: implementation, baseline, explanation, course concepts
 
@@ -17,7 +17,7 @@ We implemented/evaluated five strategies: (1) NumPy/BLAS, (2) Numba `parallel=Tr
 | ProcessPoolExecutor | [Phase 3B notebook](../notebooks/11_phase3b_processpool.ipynb) | Phase 3B 20K×128: 4 workers/chunk8 475.582 ms; **1.409×** vs sequential, slower than batched BLAS | Separate interpreters bypass GIL; IPC, task serialization, process startup, scheduling, memory and load balancing cost |
 | asyncio | [Phase 3C notebook](../notebooks/12_phase3c_asyncio.ipynb) | **Simulated I/O**, 120 × 50ms: serial 6040.915 ms; concurrency 40 154.435 ms; **39.116×**. **CPU control** 20K×128: sequential 922.691 ms, asyncio.gather 844.110 ms; no genuine CPU parallelism | Overlaps waits via cooperative scheduling; does not parallelize CPU loops without yielding/offloading |
 
-**Baseline caveat:** The Phase 1 pure-Python baseline uses 512-feature TF-IDF; Phase 3 uses 384-dimensional MiniLM embeddings. Thus Phase 1 timings (1K documents median 228.967 ms) are useful historical bottleneck context, **not an apples-to-apples parallel speedup denominator**. The closest valid baseline is sequential NumPy with *the same corpus, query set, and session*. The best Phase 2 implementation is NumPy/BLAS for the relevant dense operation, but the Phase 2C 5K×300 Gram-matrix benchmark and Phase 3 top-k search have different outputs. A strict instructor-compliant “against Phase 1 baseline and best Phase 2 version” search benchmark requires an additional same-input comparison, or explicitly qualifying the mismatched feature spaces and operations.
+**Baseline caveat:** Historical Phase 1 uses 512-feature TF-IDF; Phase 3 uses 384-dimensional MiniLM embeddings. Phase 3D now bridges this mismatch by re-running the Phase 1-style Python cosine and NumPy on identical MiniLM vectors (details below). Thus Phase 1 timings (1K documents median 228.967 ms) are useful historical bottleneck context, **not an apples-to-apples parallel speedup denominator**. The closest valid baseline is sequential NumPy with *the same corpus, query set, and session*. The best Phase 2 implementation is NumPy/BLAS for the relevant dense operation, but the Phase 2C 5K×300 Gram-matrix benchmark and Phase 3 top-k search have different outputs. A strict instructor-compliant “against Phase 1 baseline and best Phase 2 version” search benchmark requires an additional same-input comparison, or explicitly qualifying the mismatched feature spaces and operations.
 
 ## Direct same-session comparison: Phase 3B full (20K docs × 128 queries, BLAS=1)
 
@@ -81,9 +81,29 @@ Phase 3A batched matrix–matrix vs per-query matrix–vector `float32` accumula
 - [Phase 3B full raw](https://drive.google.com/file/d/1LV1DKFEoNvpiZk1mDcbk3-VOV5fr46RH/view), [summary](https://drive.google.com/file/d/1-pzqfzFE0mAjP-JV6kuxUBSU1SZXteie/view)
 
 ### To close before submission
-- [ ] Confirm/commit Phase 3C pilot and full findings to GitHub (prior connector writes blocked).
-- [ ] Strict apples-to-apples **all five methods on same search workload**, especially Numba `prange`, if needed to claim bonus fully; separate asyncio I/O task regardless.
-- [ ] Explicit Phase 1 pure-Python and best Phase 2 search comparison using **matching embeddings and ranking semantics**, or disclose that historical results are not directly comparable.
-- [ ] Fix Phase 2C plotting code `zip(g.rows,g.columns)` → `zip(g['rows'],g['columns'])` in GitHub notebook.
+- [x] Phase 3C pilot and full findings committed to GitHub.
+- [x] Same-search-task Numba `prange` comparison completed in Phase 3D; asyncio I/O task remains inherently different. **No single-session all-five experiment**, so avoid presenting a universal five-way ranking.
+- [x] Same-embedding Phase 1-style pure Python baseline vs NumPy completed in Phase 3D (Python recomputes norms; interpretation qualified). Historical Phase 1 TF-IDF remains separate.
+- [x] Fixed Phase 2C plotting code `zip(g.rows,g.columns)` → `zip(g['rows'],g['columns'])` in GitHub notebook.
 - [ ] Add tolerance-based numerical score test for batched vs per-query.
 - [ ] Validate final tables and figures against CSVs, rerun anomalous configurations if feasible.
+
+
+## Phase 3D addendum — matching vectors for Python baseline and Numba (verified full run)
+
+This additional experiment addresses two gaps in the original Phase 3 synthesis: historical Phase 1 used TF-IDF, and Phase 2C Numba used a different Gram-matrix task. In Phase 3D, the **same normalized MiniLM embeddings, query vectors and top-10 ranking** were used for Python cosine, NumPy, BLAS and Numba. See [full findings](phase3d_full_findings.md), [raw CSV](../benchmarks/phase3d_same_vectors_raw_full.csv), [summary CSV](../benchmarks/phase3d_same_vectors_summary_full.csv), [correctness CSV](../benchmarks/phase3d_same_vectors_correctness_full.csv) and [chart](../figures/phase3d_20k64_same_vectors.svg).
+
+At 20K documents × 64 queries (5 repeats, medians, same session): sequential NumPy **436.527 ms**; batched BLAS **226.436 ms (1.928×)**; Numba serial **942.034 ms (0.463×)**; Numba parallel **583.025 ms (0.749×)**. Numba parallel is **1.62× faster than Numba serial** but slower than sequential NumPy and batched BLAS. This is direct evidence on the *same search operation*, not an inference from the earlier Gram benchmark.
+
+At 1K documents × 4 queries on identical vectors, pure Python cosine **1687.633 ms** vs sequential NumPy **0.687793 ms** (~2454×). The Python algorithm recalculates norms per document, while NumPy uses normalized vectors and dot products: therefore the gain includes **algorithmic/preprocessing differences**, not merely Python vs compiled arithmetic. Large pure-Python timings were deliberately skipped. All **58** correctness records show identical top-10 sets and ordering; max measured absolute float32 score difference **1.013279e-6**. This does not invalidate the separate Phase 3A near-tie ordering discrepancy.
+
+**Revised decision:** Batched BLAS remains the best measured speedup/complexity choice for in-memory dense search. The instructor's bonus (>3 strategies) is supported by implementations and comparisons of five strategies, while noting that asyncio tests a different I/O workload and the final grading is the instructor's decision.
+
+### Repository evidence index
+
+- Phase 3A [raw](../benchmarks/phase3a_threadpool_raw_full.csv), [summary](../benchmarks/phase3a_threadpool_summary_full.csv), [findings](phase3a_full_findings.md)
+- Phase 3B [raw](../benchmarks/phase3b_processpool_raw_full.csv), [summary](../benchmarks/phase3b_processpool_summary_full.csv), [startup](../benchmarks/phase3b_processpool_startup_full.csv), [chart](../figures/phase3b_20k128_comparison.svg)
+- Phase 3C [raw](../benchmarks/phase3c_asyncio_raw_full.csv), [summary](../benchmarks/phase3c_asyncio_summary_full.csv), [findings](phase3c_full_findings.md), [chart](../figures/phase3c_asyncio_simulated_io_full.svg)
+- Phase 3D [raw](../benchmarks/phase3d_same_vectors_raw_full.csv), [summary](../benchmarks/phase3d_same_vectors_summary_full.csv), [correctness](../benchmarks/phase3d_same_vectors_correctness_full.csv), [findings](phase3d_full_findings.md), [chart](../figures/phase3d_20k64_same_vectors.svg)
+
+**Figure provenance:** SVG figures above were newly drawn from verified summary CSV values; original Colab PNG files remain in Drive. No claims of re-uploading original PNGs are made.
