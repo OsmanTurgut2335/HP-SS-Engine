@@ -2,12 +2,46 @@
 
 Course project: HPC for AI, Fall 2026. This repository implements and benchmarks a text similarity search system, beginning with a deliberately slow pure-Python baseline and progressively testing matrix representations, dimensionality reduction, vectorization/JIT and parallelism.
 
-## Current status
+## FINAL SYSTEM — CURRENT SUBMISSION STATUS (2026-10-21)
+
+**All four implementation phases are completed.** The earlier sections of this README document the historical incremental development process; for current results use the links below.
+
+- [Phase 4 final verified findings](report/phase4_final_findings.md): correctness, 1K–20K scaling, measured 20K tradeoffs, limitations and live-demo evidence.
+- [Phase 4B full correctness CSV](benchmarks/phase4b_correctness_summary_full_20k.csv) and [Top-10 overlap plot](figures/phase4b_svd_top10_overlap_full_20k.png).
+- [Phase 4C 60 raw timed measurements](benchmarks/phase4c_scaling_raw_full.csv), [summary](benchmarks/phase4c_scaling_summary_full.csv), [environment](benchmarks/phase4c_environment_full.json) and [scaling plot](figures/phase4c_scaling_full.png).
+- [Phase 4D live-demo Colab notebook](notebooks/17_phase4d_live_demo.ipynb) ([open in Colab](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/feature/phase4-final-system/notebooks/17_phase4d_live_demo.ipynb)).
+
+### Reproduce the final 20K live demo
+
+1. Use **free Google Colab, CPU runtime**. The source corpus and cached models are on the connected project Google Drive; the repository intentionally does not include large model/data files.
+2. Confirm these existing paths under `MyDrive/HP-SS-Engine/`:
+   - `data/raw/qwen_corpus_20k_progress.jsonl` (20K Qwen responses)
+   - `phase2_matrix_ops/2A_sparse_dense/qwen_20k_minilm_384_float32.npy` (20K×384 float32)
+   - `phase4_final_system/models/truncated_svd_k100_full_20k.joblib`
+   - `phase4_final_system/models/reduced_index_k100_full_20k.npy`
+3. Open `notebooks/17_phase4d_live_demo.ipynb` in Colab; run all setup cells, mount Drive, and wait for `READY`.
+4. In the last cell, type a fresh English query and click **Search top 10**. The results and individual timings are computed live.
+5. To reproduce measurements, run notebook `15_phase4b_correctness.ipynb` and `16_phase4c_scaling.ipynb` with `PILOT=False`. Scaling uses 100 queries, two warmups, five timed repeats, four corpus sizes, one BLAS thread. Run Phase 4A full first if saved SVD artifacts are absent.
+
+**Important:** The 20K scaling result 190.792 ms is for **100 batched queries** including Top-10 ranking. A single user-observed live query took 69.91 ms end-to-end in one run; that is not a replicated benchmark. Phase 4B's 77% external Top-10 overlap measures agreement with exact 384d ranking, not ground-truth relevance.
+
+### Phase branches
+
+- [Phase 1](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase1-baseline)
+- [Phase 2 (isolated)](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase2-matrix-ops)
+- [Phase 3 (isolated)](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase3-parallelism)
+- [Phase 4 final system](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase4-final-system)
+
+**Pending deliverables:** final 10–15-page PDF report and 15-minute presentation + 5-minute Q&A. The required 30-second live demo has been tested but should be rehearsed before class.
+
+---
+
+## Historical development status
 
 - **Dataset:** 20,000 English responses generated with Qwen2.5-0.5B-Instruct; unique IDs and prompts verified. Full JSONL is stored on Google Drive, not committed to GitHub.
 - **Phase 1 completed:** explicit Python-loop cosine, top-10 retrieval, correctness checks, `cProfile`, `line_profiler`, and 75 timed searches at 100/500/1,000 documents. Median times: **29.685 / 125.223 / 228.967 ms**.
-- **Phase 2A completed:** 1K/5K/10K/20K, 400 measured searches, custom dot-product methods, real 384-dimensional MiniLM embeddings, memory and latency figures. [Results](report/phase2a_sparse_dense_results.md) · [Figures](figures/phase2a_figures.md). Phase 2B/2C pending.
-- **Phase 3/4:** not yet implemented.
+- **Phase 2A completed:** 1K/5K/10K/20K, 400 measured searches, custom dot-product methods, real 384-dimensional MiniLM embeddings, memory and latency figures. [Results](report/phase2a_sparse_dense_results.md) · [Figures](figures/phase2a_figures.md). Phase 2B/2C complete; see linked full reports and notebooks below.
+- **Phase 3/4:** implemented and benchmarked. See the current final-system guide below.
 
 ## Repository layout
 
@@ -65,9 +99,9 @@ Large JSONL and future embeddings stay in Drive. Code, lightweight raw CSV resul
 
 [Full measured analysis](report/phase2a_sparse_dense_results.md) · [Raw timing CSV](benchmarks/raw_results/phase2a_dot_products_raw.csv) · [Memory CSV](benchmarks/raw_results/phase2a_memory.csv) · [Figures](figures/phase2a_figures.md). At 20K, TF-IDF CSR occupies 6.701 MiB, dense embeddings 29.297 MiB, embedding CSR 58.670 MiB. Same-embedding dense–dense search median 149.586 ms, versus 6066.276 ms for custom embedding sparse–sparse. This comparison is specific to these algorithms and CPU environment.
 
-## Phase 2B notebook prepared (not yet benchmarked)
+## Phase 2B notebook preparation (historical notes; full benchmarks completed)
 
-[Notebook 07 — Dimensionality Reduction](notebooks/07_phase2b_dimensionality_reduction.ipynb) follows instructor `starter_code/phase2_matrix_ops/svd_power_iteration.py` using real cached 20K × 384 MiniLM embeddings. Implements custom block power-iteration SVD, sklearn TruncatedSVD and PCA, and a 1K NumPy full-SVD reference. Pilot is enabled by default (1K, k=50). After correctness, full run will measure N=1K/5K/10K/20K, k=50/100/200, fit+reconstruction time, Frobenius error, projected array storage and plots. **No Phase 2B experimental results have been claimed yet.**
+[Notebook 07 — Dimensionality Reduction](notebooks/07_phase2b_dimensionality_reduction.ipynb) follows instructor `starter_code/phase2_matrix_ops/svd_power_iteration.py` using real cached 20K × 384 MiniLM embeddings. Implements custom block power-iteration SVD, sklearn TruncatedSVD and PCA, and a 1K NumPy full-SVD reference. Pilot is enabled by default (1K, k=50). After correctness, full run will measure N=1K/5K/10K/20K, k=50/100/200, fit+reconstruction time, Frobenius error, projected array storage and plots. **Historical planning note:** Phase 2B full experiments were subsequently completed; see the full results section below.
 
 
 ## Phase 2B complete: measured artifacts
