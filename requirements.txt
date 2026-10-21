@@ -1,5 +1,5 @@
 # Project-wide Python dependencies; exact compatible versions will be pinned
-# after Phase 2/3 implementation and a clean Colab reproducibility run.
+# after a clean Colab reproducibility run; notebook-specific pip installs are also present.
 # Phase 1: TF-IDF, numerical verification, profiling and figures
 numpy
 scipy
@@ -23,3 +23,8 @@ sentence-transformers
 
 # Phase 3 parallel Ray approach (planned; install only when needed)
 # ray
+
+# Phase 4: saved SVD model, BLAS thread controls, live Colab widget
+joblib
+threadpoolctl
+ipywidgets
