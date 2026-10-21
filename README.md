@@ -32,7 +32,7 @@ Course project: HPC for AI, Fall 2026. This repository implements and benchmarks
 - [Phase 3 (isolated)](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase3-parallelism)
 - [Phase 4 final system](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase4-final-system)
 
-**Pending deliverables:** final 10–15-page PDF report and 15-minute presentation + 5-minute Q&A. The required 30-second live demo has been tested but should be rehearsed before class.
+**Final technical report:** [12-page PDF](report/HP_SS_Engine_Final_Technical_Report.pdf) with seven evidence figures. **Still pending:** 15-minute presentation + 5-minute Q&A and rehearsal of the 30-second live demo. The PDF is also saved in the Google Drive project report folder.
 
 ---
 
