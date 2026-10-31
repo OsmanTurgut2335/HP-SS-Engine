@@ -71,4 +71,4 @@ These figures come from **different experiments and workloads**; compare methods
 
 ## Known limitations
 
-The `requirements.txt` ranges are not a byte-for-byte environment lockfile; the original environment JSON recorded Python 3.13.16 and NumPy 2.1.3, but not every library version. Some early-phase figures are indexed via Drive links rather than copied into the repository. Phase 4D measures a single query per interaction; Phase 4C is the controlled five-repeat benchmark. Exact 384d correctness and approximate SVD ranking overlap are distinct properties.
+The `requirements.txt` ranges are not a byte-for-byte environment lockfile; the original environment JSON recorded Python 3.13.16 and NumPy 2.1.3, but not every library version. Phase 1 and Phase 2A figures were copied from Drive into GitHub; source notebooks and raw timing CSVs remain linked for regeneration. Phase 4D measures a single query per interaction; Phase 4C is the controlled five-repeat benchmark. Exact 384d correctness and approximate SVD ranking overlap are distinct properties.
