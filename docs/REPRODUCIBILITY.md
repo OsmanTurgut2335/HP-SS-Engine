@@ -18,6 +18,7 @@ python -m pip install -r requirements.txt
 python scripts/download_release_assets.py --root ./HP-SS-Engine
 python scripts/download_release_assets.py --root ./HP-SS-Engine --verify-only
 python scripts/preflight_assets.py --root ./HP-SS-Engine
+python scripts/smoke_test_search.py --root ./HP-SS-Engine
 ```
 
 This puts the 20K corpus, MiniLM embeddings, SVD model and normalized 100d index in the paths expected by Phase 4 notebooks. The downloader reuses valid files, replaces invalid files and checks SHA-256 before accepting a download. **The preflight validates shapes, IDs and normalization**; it is not a substitute for rerunning benchmark experiments. The `.joblib` model uses Python pickle serialization; only load this trusted published asset.
