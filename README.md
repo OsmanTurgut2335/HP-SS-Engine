@@ -70,12 +70,14 @@ These figures come from **different experiments and workloads**; compare methods
 ```bash
 python scripts/download_release_assets.py --root ./HP-SS-Engine
 python scripts/preflight_assets.py --root ./HP-SS-Engine
+python scripts/smoke_test_search.py --root ./HP-SS-Engine
 ```
 
 
 - `requirements.txt` — search, profiling and benchmark dependencies, compatible version ranges.
 - `requirements-generation.txt` — optional Qwen corpus-generation dependencies.
-- `scripts/preflight_assets.py` — verifies the 20K corpus, 384d embeddings, fitted SVD and 100d index.
+- `scripts/preflight_assets.py` — validates the 20K corpus, 384d embeddings, fitted SVD and 100d index.
+- `scripts/smoke_test_search.py` — exercises CPU Top-10 retrieval using a saved document embedding (no external model download).
 - The four exact large assets are in [public Release v1.0-final](https://github.com/OsmanTurgut2335/HP-SS-Engine/releases/tag/v1.0-final), **not in Git history**. [Download and verify](scripts/download_release_assets.py) them without Google Drive credentials. See [asset inventory](docs/FINAL_ASSETS.md).
 - The live demo notebook uses the Release directly. Historical benchmark notebooks 00–16 may still use the original Colab Drive cache paths; see [reproduction guide](docs/REPRODUCIBILITY.md).
 
