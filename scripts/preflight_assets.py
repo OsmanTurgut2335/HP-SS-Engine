@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Validate required HP-SS Engine assets before running Phase 4 notebooks.
 
-Colab example:
-  !python scripts/preflight_assets.py --root /content/drive/MyDrive/HP-SS-Engine
+Local example after downloading Release assets:
+  python scripts/preflight_assets.py --root ./HP-SS-Engine
+Colab demo root: /content/HP-SS-Engine
 """
 import argparse
 import json
