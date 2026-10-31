@@ -8,7 +8,7 @@
 
 - **[Reproduction guide — read before running](docs/REPRODUCIBILITY.md)**: independent rebuild, Drive paths, dependency installation, asset validation and known limitations.
 - **[Live demo in Google Colab](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/main/notebooks/17_phase4d_live_demo.ipynb)**: the updated presentation interface. **Automatically downloads and SHA-256 verifies all four public Release assets; no Drive needed.**
-- **[12-page technical report](report/HP_SS_Engine_Final_Technical_Report.pdf)**: existing report in repository; any newer review copy should be checked before replacing this artifact.
+- **[12-page final technical report](report/HP_SS_Engine_Final_Technical_Report.pdf.pdf)**: final submission copy, updated with GitHub Release reproducibility details and profiling evidence.
 - [Final Phase 4 findings](report/phase4_final_findings.md) · [Benchmark CSVs](benchmarks/) · [Figures](figures/) · [Presentation evidence notes](report/presentation_notes.md).
 
 **Source/version note:** The repository's default `main` branch contains the current code and documentation. Release `v1.0-final` contains the verified four binary assets, but its automatically generated source ZIP is a snapshot from before the last demo fixes. **Use `main` for code and the Release for binaries.** A single final source tag can be created after the report and presentation are frozen.
