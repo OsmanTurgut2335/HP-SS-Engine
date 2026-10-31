@@ -1,10 +1,10 @@
 # Reproducing HP-SS-Engine (GitHub-first)
 
-**Source of truth:** the [GitHub repository](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase4-final-system) contains all source notebooks, benchmark CSV/JSON, figures, report and documentation. The **four exact 20K data/model artifacts** are published as public downloadable assets in [Release v1.0-final](https://github.com/OsmanTurgut2335/HP-SS-Engine/releases/tag/v1.0-final). **Google Drive is not required for the final live demo.**
+**Source of truth:** the [GitHub repository](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/main) contains all source notebooks, benchmark CSV/JSON, figures, report and documentation. The **four exact 20K data/model artifacts** are published as public downloadable assets in [Release v1.0-final](https://github.com/OsmanTurgut2335/HP-SS-Engine/releases/tag/v1.0-final). **Google Drive is not required for the final live demo.**
 
 ## Fastest: run live search in a new Colab account (no Drive)
 
-1. Open [Notebook 17 in Colab](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/feature/phase4-final-system/notebooks/17_phase4d_live_demo.ipynb).
+1. Open [Notebook 17 in Colab](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/main/notebooks/17_phase4d_live_demo.ipynb).
 2. Choose **Runtime → Run all**. The first cell installs dependencies and downloads the four public Release files into `/content/HP-SS-Engine/`. It checks their **published SHA-256 digests** and byte sizes. This requires internet access for GitHub, PyPI and the MiniLM model on Hugging Face; **no Google Drive permission**.
 3. Wait for the MiniLM model to download and the warmup to pass. Enter a new English query and click **Search Top 10**.
 4. The displayed timing is for that single live query; the five-repeat batch measurements are in Phase 4C and must not be conflated.
@@ -55,4 +55,8 @@ Original experiment outputs are versioned in [benchmarks](../benchmarks/); figur
 - Phase 3D uses matched 384d vectors for the fair NumPy/Numba comparison.
 - Phase 4B exact 384d Top-10 matches a float64 reference within 1e-5 score tolerance; approximate SVD100 rankings differ by design.
 - Phase 4C 190.792 ms is the median **100-query batch** runtime, not a single live-query latency.
-- The public Release's file names, sizes and SHA-256 digests were checked via GitHub's release metadata. A fresh Colab run and a full end-to-end download/semantic-search execution must still be performed to certify runtime compatibility.
+- The public Release's file names, sizes and SHA-256 digests were checked via GitHub's release metadata. A fresh public-Release Colab text-query demo was confirmed working by the project author on 31 October 2026. A separate clean GitHub Actions run successfully downloaded, verified and exercised CPU Top-10 retrieval.
+
+## Independent verification evidence
+
+[GitHub Actions successful public-Release asset + CPU Top-10 smoke test](https://github.com/OsmanTurgut2335/HP-SS-Engine/actions/runs/41235272777). The project author separately ran Notebook 17 in Colab and confirmed that the interactive Top-10 results rendered. The automated smoke test uses an existing embedding; it is not a replacement for the live MiniLM text-encoder test.
