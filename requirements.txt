@@ -1,30 +1,20 @@
-# Project-wide Python dependencies; exact compatible versions will be pinned
-# after a clean Colab reproducibility run; notebook-specific pip installs are also present.
-# Phase 1: TF-IDF, numerical verification, profiling and figures
-numpy
-scipy
-scikit-learn
-pandas
-matplotlib
-line_profiler
-psutil
+# HP-SS-Engine — Python dependencies
+# Reference measurement environment: Python 3.13.16, NumPy 2.1.3 (Colab Linux, 2 CPUs).
+# Other package versions were NOT captured in the original benchmark manifests;
+# these compatible ranges are installation guidance, not claims of an exact reproduced environment.
+# Install with: python -m pip install -r requirements.txt
+numpy>=2.0,<2.3
+scipy>=1.14,<2
+scikit-learn>=1.6,<2
+pandas>=2.2,<3
+matplotlib>=3.9,<4
+numba>=0.61,<0.64
+line_profiler>=4,<6
+psutil>=6,<8
+joblib>=1.4,<2
+threadpoolctl>=3.5,<4
+sentence-transformers>=3,<6
+ipywidgets>=8,<9
 
-# Corpus generation (Qwen2.5-0.5B-Instruct, notebooks/03_...)
-torch
-transformers>=4.44,<5
-accelerate
-safetensors
-
-# Phase 2C: JIT compilation
-numba
-
-# Dense semantic embeddings for Phase 2A (planned)
-sentence-transformers
-
-# Phase 3 parallel Ray approach (planned; install only when needed)
-# ray
-
-# Phase 4: saved SVD model, BLAS thread controls, live Colab widget
-joblib
-threadpoolctl
-ipywidgets
+# Corpus-generation-only dependencies (not required to run the saved search index):
+# python -m pip install -r requirements-generation.txt
