@@ -11,6 +11,8 @@
 - **[12-page technical report](report/HP_SS_Engine_Final_Technical_Report.pdf)**: existing report in repository; any newer review copy should be checked before replacing this artifact.
 - [Final Phase 4 findings](report/phase4_final_findings.md) · [Benchmark CSVs](benchmarks/) · [Figures](figures/) · [Presentation evidence notes](report/presentation_notes.md).
 
+**Version note:** Release tag `v1.0-final` was created before the latest GitHub-first notebook and documentation fixes. Its **four downloadable binary assets are correct**; for the current source code use the linked `feature/phase4-final-system` branch, **not** the Release's auto-generated source ZIP. A final source tag can be created once the presentation and final PDF are frozen.
+
 ## Final system
 
 ```text
