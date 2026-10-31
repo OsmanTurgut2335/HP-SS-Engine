@@ -2,16 +2,16 @@
 
 **YZM 513 / HPC for AI — Fall 2026** · 20,000 Qwen-generated English documents · MiniLM 384d · TruncatedSVD 100d · CPU BLAS Top-10 retrieval.
 
-**Status:** Phases 0–4 implemented and benchmarked. Public 20K dataset, embeddings and saved search model/index published in [Release v1.0-final](https://github.com/OsmanTurgut2335/HP-SS-Engine/releases/tag/v1.0-final). The 15-minute presentation deck is a separate deliverable and is not yet in this repository.
+**Status:** Phases 0–4 implemented and benchmarked; independent GitHub Actions CPU search smoke test passed; user-confirmed Colab live query worked. Public 20K dataset, embeddings and saved search model/index published in [Release v1.0-final](https://github.com/OsmanTurgut2335/HP-SS-Engine/releases/tag/v1.0-final). The 15-minute presentation deck is a separate deliverable and is not yet in this repository.
 
 ## Start here
 
 - **[Reproduction guide — read before running](docs/REPRODUCIBILITY.md)**: independent rebuild, Drive paths, dependency installation, asset validation and known limitations.
-- **[Live demo in Google Colab](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/feature/phase4-final-system/notebooks/17_phase4d_live_demo.ipynb)**: the updated presentation interface. **Automatically downloads and SHA-256 verifies all four public Release assets; no Drive needed.**
+- **[Live demo in Google Colab](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/main/notebooks/17_phase4d_live_demo.ipynb)**: the updated presentation interface. **Automatically downloads and SHA-256 verifies all four public Release assets; no Drive needed.**
 - **[12-page technical report](report/HP_SS_Engine_Final_Technical_Report.pdf)**: existing report in repository; any newer review copy should be checked before replacing this artifact.
 - [Final Phase 4 findings](report/phase4_final_findings.md) · [Benchmark CSVs](benchmarks/) · [Figures](figures/) · [Presentation evidence notes](report/presentation_notes.md).
 
-**Version note:** Release tag `v1.0-final` was created before the latest GitHub-first notebook and documentation fixes. Its **four downloadable binary assets are correct**; for the current source code use the linked `feature/phase4-final-system` branch, **not** the Release's auto-generated source ZIP. A final source tag can be created once the presentation and final PDF are frozen.
+**Source/version note:** The repository's default `main` branch contains the current code and documentation. Release `v1.0-final` contains the verified four binary assets, but its automatically generated source ZIP is a snapshot from before the last demo fixes. **Use `main` for code and the Release for binaries.** A single final source tag can be created after the report and presentation are frozen.
 
 ## Final system
 
@@ -65,7 +65,7 @@ These figures come from **different experiments and workloads**; compare methods
 
 ## Installation and storage
 
-**Quick start in a new Colab session:** [Open the public live demo notebook](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/feature/phase4-final-system/notebooks/17_phase4d_live_demo.ipynb) and choose **Runtime → Run all**. It downloads four Release assets, verifies SHA-256, downloads the public MiniLM model, and opens a Top-10 search widget. Network access is required; Google Drive is not.
+**Quick start in a new Colab session:** [Open the public live demo notebook](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/main/notebooks/17_phase4d_live_demo.ipynb) and choose **Runtime → Run all**. It downloads four Release assets, verifies SHA-256, downloads the public MiniLM model, and opens a Top-10 search widget. Network access is required; Google Drive is not.
 
 **Local asset download:**
 
@@ -85,4 +85,4 @@ python scripts/smoke_test_search.py --root ./HP-SS-Engine
 
 ## Known limitations
 
-The independent public-Release live demo has not yet been certified by a fresh end-to-end Colab run. The `requirements.txt` ranges are not a byte-for-byte environment lockfile; the original environment JSON recorded Python 3.13.16 and NumPy 2.1.3, but not every library version. Phase 1 and Phase 2A figures were copied from Drive into GitHub; source notebooks and raw timing CSVs remain linked for regeneration. Phase 4D measures a single query per interaction; Phase 4C is the controlled five-repeat benchmark. Exact 384d correctness and approximate SVD ranking overlap are distinct properties.
+The public-Release Colab live demo was run successfully by the project author, and the separate GitHub Actions CPU smoke test passed. The `requirements.txt` ranges are not a byte-for-byte environment lockfile; the original environment JSON recorded Python 3.13.16 and NumPy 2.1.3, but not every library version. Phase 1 and Phase 2A figures were copied from Drive into GitHub; source notebooks and raw timing CSVs remain linked for regeneration. Phase 4D measures a single query per interaction; Phase 4C is the controlled five-repeat benchmark. Exact 384d correctness and approximate SVD ranking overlap are distinct properties.
