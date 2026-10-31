@@ -1,65 +1,57 @@
-# Reproduction and Drive/GitHub asset policy
+# Reproducing HP-SS-Engine (GitHub-first)
 
-**Source of truth:** GitHub branch `feature/phase4-final-system` holds all project notebooks, code, reports, figures and benchmark tables. **Google Drive is an artifact cache**, not a separate source-code repository. Large binary assets are intentionally excluded from GitHub via `.gitignore`.
+**Source of truth:** the [GitHub repository](https://github.com/OsmanTurgut2335/HP-SS-Engine/tree/feature/phase4-final-system) contains all source notebooks, benchmark CSV/JSON, figures, report and documentation. The **four exact 20K data/model artifacts** are published as public downloadable assets in [Release v1.0-final](https://github.com/OsmanTurgut2335/HP-SS-Engine/releases/tag/v1.0-final). **Google Drive is not required for the final live demo.**
 
-## 1. What is in GitHub and what is not?
+## Fastest: run live search in a new Colab account (no Drive)
 
-| Artifact | GitHub | Google Drive |
-|---|---|---|
-| All notebooks 00–17, scripts, README, dependency files | Yes | Not required |
-| Raw benchmark CSVs, environment JSON, profiling text | Yes | May also have run copies |
-| Final plots and final report | Yes | May also have copies |
-| Qwen 20K JSONL corpus (~10.8 MB) | No | `data/raw/qwen_corpus_20k_progress.jsonl` |
-| MiniLM 20K×384 float32 (~30.7 MB) | No | `phase2_matrix_ops/2A_sparse_dense/qwen_20k_minilm_384_float32.npy` |
-| Saved SVD k=100 model and 20K×100 index | No | `phase4_final_system/models/` |
+1. Open [Notebook 17 in Colab](https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/feature/phase4-final-system/notebooks/17_phase4d_live_demo.ipynb).
+2. Choose **Runtime → Run all**. The first cell installs dependencies and downloads the four public Release files into `/content/HP-SS-Engine/`. It checks their **published SHA-256 digests** and byte sizes. This requires internet access for GitHub, PyPI and the MiniLM model on Hugging Face; **no Google Drive permission**.
+3. Wait for the MiniLM model to download and the warmup to pass. Enter a new English query and click **Search Top 10**.
+4. The displayed timing is for that single live query; the five-repeat batch measurements are in Phase 4C and must not be conflated.
 
-**Access limitation:** The Drive folder is not a public GitHub artifact. A reader without access to the author's Drive **cannot run the cached-asset demo immediately**. The notebooks below allow independent reconstruction in the reader's own Google Drive. If the instructor needs the *exact same cached corpus/index*, share those files directly with the instructor or provide a controlled artifact archive. Do not claim the current repository is a zero-download, fully self-contained checkout.
+## Download and validate all four assets locally
 
-## 2. Rebuild on your own Google Drive (independent path)
-
-1. Open [Google Colab](https://colab.research.google.com/) and mount **your own** Drive. All notebooks use `/content/drive/MyDrive/HP-SS-Engine`; create that folder in your Drive. Use the GitHub Colab links below, not copies of stale notebooks.
-2. [Notebook 03 — generate Qwen corpus](../notebooks/03_generate_corpus_resumable.ipynb): select a **T4 GPU** runtime. Generate 20,000 English responses and write `data/raw/qwen_corpus_20k_progress.jsonl`. This is the expensive offline generation stage. Sampling settings are fixed in the notebook, but hardware/library versions can affect exact output text.
-3. [Notebook 06 — MiniLM embeddings](../notebooks/06_phase2a_sparse_dense.ipynb): produce `phase2_matrix_ops/2A_sparse_dense/qwen_20k_minilm_384_float32.npy`. The notebook also benchmarks sparse/dense methods; let the embedding cache complete before Phase 4.
-4. [Notebook 14 — final pipeline](../notebooks/14_phase4a_final_pipeline.ipynb): change `PILOT=True` to `PILOT=False`, then **Run all**. It fits/saves the full 20K `truncated_svd_k100_full_20k.joblib` and `reduced_index_k100_full_20k.npy`.
-5. [Notebook 15 — correctness](../notebooks/15_phase4b_correctness.ipynb): set `PILOT=False` and rerun; check exact 384d score tolerance `1e-5` and separate SVD Top-10 overlap.
-6. [Notebook 16 — scaling](../notebooks/16_phase4c_scaling.ipynb): set `PILOT=False`, rerun; 100 queries, two warmups, five timed repetitions, corpus sizes 1K/5K/10K/20K, BLAS threads=1.
-7. [Notebook 17 — live demo](../notebooks/17_phase4d_live_demo.ipynb): run all setup cells, then enter an English query and press **Search Top 10**.
-
-**Direct Colab:** https://colab.research.google.com/github/OsmanTurgut2335/HP-SS-Engine/blob/feature/phase4-final-system/notebooks/17_phase4d_live_demo.ipynb
-
-## 3. Using existing cached artifacts
-
-If the instructor has been given access to the Drive assets, place them under the exact paths listed in the table above. The original Drive folder: https://drive.google.com/drive/folders/1v3QHC93L1Y0XLYmvyQDh08wbxHvk7LVn . Access is subject to the owner's permissions.
-
-After mounting Drive, validate the four essential files using `scripts/preflight_assets.py` (from a cloned repo):
-
-```bash
-python scripts/preflight_assets.py --root /content/drive/MyDrive/HP-SS-Engine
-```
-
-The preflight checks document IDs, nonempty responses, embedding/index shapes and dtypes, SVD component shape, and reduced-index normalization. **It does not substitute for running the correctness benchmarks.**
-
-## 4. Installation
-
-The current code is notebook-first. Notebook setup cells install their own dependencies; for local development:
+Python 3.11–3.13 is a reasonable installation target, but a fresh dependency-resolve/run has not been certified across all these versions. In a local checkout:
 
 ```bash
 python -m pip install -r requirements.txt
-# Only if generating the corpus from scratch:
-python -m pip install -r requirements-generation.txt
+python scripts/download_release_assets.py --root ./HP-SS-Engine
+python scripts/download_release_assets.py --root ./HP-SS-Engine --verify-only
+python scripts/preflight_assets.py --root ./HP-SS-Engine
 ```
 
-Reference recorded Phase 4C environment: Python 3.13.16, NumPy 2.1.3, Linux, two logical CPUs, BLAS threads=1. Exact versions of other packages were not logged, so `requirements.txt` specifies compatible ranges rather than claiming a fully frozen environment. CPU timing results can vary across machines and sessions.
+This puts the 20K corpus, MiniLM embeddings, SVD model and normalized 100d index in the paths expected by Phase 4 notebooks. The downloader reuses valid files, replaces invalid files and checks SHA-256 before accepting a download. **The preflight validates shapes, IDs and normalization**; it is not a substitute for rerunning benchmark experiments. The `.joblib` model uses Python pickle serialization; only load this trusted published asset.
 
-## 5. Evidence, correctness and fair comparisons
+| Asset | Target under `./HP-SS-Engine` |
+|---|---|
+| 20K corpus | `data/raw/qwen_corpus_20k_progress.jsonl` |
+| 20K × 384 float32 MiniLM | `phase2_matrix_ops/2A_sparse_dense/qwen_20k_minilm_384_float32.npy` |
+| TruncatedSVD k=100 | `phase4_final_system/models/truncated_svd_k100_full_20k.joblib` |
+| 20K × 100 float32 index | `phase4_final_system/models/reduced_index_k100_full_20k.npy` |
 
-- Benchmark CSVs are versioned in [benchmarks/](../benchmarks/); plots are in [figures/](../figures/).
-- Phase 1's pure Python baseline uses TF-IDF; do **not** compare it directly with final MiniLM/SVD search as a same-vector speedup.
-- Phase 3D is the controlled same-vector comparison.
-- Phase 4B verifies float32 BLAS against a float64 reference (tolerance `1e-5`). The 100d SVD index is approximate and does **not** promise identical Top-10 rankings.
-- Phase 4C's 190.792 ms is a **100-query batch median**, not the latency of a single interactive query.
-- Phase 4D shows a real interactive query and a per-run timing breakdown. Single demo times are not five-repeat benchmarks.
+[File sizes, SHA-256 hashes and direct download URLs](FINAL_ASSETS.md).
 
-## 6. Data integrity and cleanup policy
+## Reproducing all experiments (separate from live demo)
 
-Never delete raw JSONL, cached embeddings, model/index files or raw timing CSVs to reduce folder clutter. These are the reproducibility assets. GitHub is authoritative for code and documentation; Drive holds the heavy data/cache only. Do not treat the two locations as automatic bidirectional synchronization.
+The original notebooks 00–16 were authored and benchmarked in Google Colab with Drive as an **output/cache directory**. Many still mount `/content/drive/MyDrive/HP-SS-Engine`. If reproducing *those exact notebooks*, mount your **own** Drive and place the downloaded assets in that same project folder. This is an original-experiment storage convention, **not a restriction on downloading the data or using Notebook 17**.
+
+- 03: regenerate 20K Qwen responses (T4 GPU recommended; expensive and not necessary for using the Release corpus).
+- 05: pure Python cosine and profiling.
+- 06: sparse/dense representations and MiniLM embeddings.
+- 07–09: SVD/PCA and vectorization/JIT.
+- 10–13: ThreadPool, ProcessPool, asyncio and matched NumPy/Numba.
+- 14: final pipeline; set `PILOT=False` for 20K. If saved model/index exist, it loads them.
+- 15: correctness; set `PILOT=False`.
+- 16: scaling; set `PILOT=False`; two warmups and five timed repetitions.
+- 17: independent GitHub Release live demo; **no Drive mount**.
+
+Original experiment outputs are versioned in [benchmarks](../benchmarks/); figures in [figures](../figures/). Some notebooks also write their own Drive cache.
+
+## Reproducibility and methodological limits
+
+- Reference measured Phase 4C environment: Python 3.13.16, NumPy 2.1.3, two logical CPUs, one BLAS thread. Other installed package versions were not all recorded; `requirements.txt` contains compatibility ranges rather than a verified lockfile.
+- Phase 1 uses 512d TF-IDF and is **not** a matched-input speedup comparison with final MiniLM/SVD.
+- Phase 3D uses matched 384d vectors for the fair NumPy/Numba comparison.
+- Phase 4B exact 384d Top-10 matches a float64 reference within 1e-5 score tolerance; approximate SVD100 rankings differ by design.
+- Phase 4C 190.792 ms is the median **100-query batch** runtime, not a single live-query latency.
+- The public Release's file names, sizes and SHA-256 digests were checked via GitHub's release metadata. A fresh Colab run and a full end-to-end download/semantic-search execution must still be performed to certify runtime compatibility.
